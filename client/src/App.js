@@ -11,6 +11,9 @@ function App() {
   ]); 
   const [turn,setTurn] = useState("X")
   const [winner,setWinner] = useState(null);
+  const [whoIsX,setWhoIsX] = useState("");
+  const [player1,setPlayer1] = useState(0);
+  const [player2,setPlayer2] = useState(0);
   const row = (row,i)=>row.map((e,index)=><div key={index} className ="cell" onClick={()=>handleClick(i,index)}>{e}</div>)
   const handleClick = (i,index)=>{
    if( board[i][index]==="")
@@ -43,16 +46,67 @@ function App() {
     setWinner("O");
   },[board])
 
+  useEffect(()=>{
+    if(winner!==null)
+    {
+      let count1 = player1;
+      let count2 = player2;
+      if(winner==="X")
+        {
+          if(whoIsX==="player1")  
+            {
+              count1 += 1;
+              setPlayer1(count1);
+            }
+          else
+           { 
+            count2 += 1;
+            setPlayer2(count2)
+           }
+        }
+      else if(winner==="O")
+        {
+           if(whoIsX==="player1")  
+           {
+            count1 += 1;
+            setPlayer1(count1);
+          }
+          else
+            { 
+              count2 += 1;
+              setPlayer2(count2)
+             }
+        }
+    }
+    // eslint-disable-next-line
+  },[winner])
+
+  useEffect(()=>{
+    if(whoIsX==="")
+      {
+        Math.floor(Math.random() * 2) + 1===1?setWhoIsX("player1"):setWhoIsX("player2");
+      }
+
+  },[whoIsX])
+
   return (
     <div className="App">
-     {winner!==null?<Confetti width={width} height={height}/>:null}
-     <div className ="name">Tic Tac Toe </div>
-     {winner===null?<div
-      className = "board">
+    <div className ="name">Tic Tac Toe </div>
+    <div className ="line">
+     <div className = "whoIsX">{`${whoIsX} is X`}</div>
+     <div className ="again" onClick={()=>{setWhoIsX("");setPlayer2(0);setPlayer1(0);setTurn("X");setWinner(null);setBoard([["","",""],["","",""],["","",""]]);}}>Restart</div>
+     </div>
+     {winner!==null?<Confetti width={width} height={height}/>:null}     
+     <div className="game">
+     <div className ="player">{`player 1 won ${player1} times`}</div>
+     {winner===null?
+     <div className = "board">
      <div className = "row"> {row(board[0],0)} </div>
      <div className = "row"> {row(board[1],1)} </div>
      <div className = "row"> {row(board[2],2)} </div>
-     </div>:<div  className = "board win"> {winner} Won the game <div className ="startAgain" onClick={()=>{setWinner(null);setBoard([["","",""],["","",""],["","",""]]);}}>Start Again</div></div>}
+     </div>:<div  className = "board win"> {winner} Won the game <div className ="startAgain" onClick={()=>{setTurn("X");setWinner(null);setBoard([["","",""],["","",""],["","",""]]);}}>Start Again</div></div>}
+     <div className ="player">{`player 2 won ${player2} times`}</div>
+     </div>
     </div>
   );
 }
