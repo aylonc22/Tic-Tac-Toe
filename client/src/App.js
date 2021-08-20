@@ -44,6 +44,20 @@ function App() {
     ||(board[0][0]==="O" && board[1][1]==="O" && board[2][2]==="O")
     ||(board[0][2]==="O" && board[1][1]==="O" && board[2][0]==="O"))
     setWinner("O");
+
+    let flag = false;
+    for(let i=0;i<board.length;i++)
+      for(let j=0;j<board[i].length;j++)
+        if(board[i][j]==="")
+          flag = true;
+    if(!flag)
+    {
+      console.log("HERE");
+      setTurn("X");
+      setWinner(null);
+      setBoard([["","",""],["","",""],["","",""]]);
+      setWhoIsX("");
+    }
   },[board])
 
   useEffect(()=>{
@@ -104,7 +118,7 @@ function App() {
      <div className = "row"> {row(board[0],0)} </div>
      <div className = "row"> {row(board[1],1)} </div>
      <div className = "row"> {row(board[2],2)} </div>
-     </div>:<div  className = "board win"> {winner} Won the game <div className ="startAgain" onClick={()=>{setTurn("X");setWinner(null);setBoard([["","",""],["","",""],["","",""]]);}}>Start Again</div></div>}
+     </div>:<div  className = "board win"> {winner} Won the game <div className ="startAgain" onClick={()=>{setWhoIsX("");setTurn("X");setWinner(null);setBoard([["","",""],["","",""],["","",""]]);}}>Start Again</div></div>}
      <div className ="player">{`player 2 won ${player2} times`}</div>
      </div>
     </div>
